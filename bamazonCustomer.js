@@ -71,19 +71,19 @@ function orderProducts() {
                         "UPDATE products SET ? WHERE ?", 
                     [
                         {
-                            stock_quantity: stock_quantity - answer.quantity
+                            stock_quantity: chosenItem.stock_quantity - parseInt(answer.quantity)
                         },
                         {
                             item_id: chosenItem.item_id
                         }
                     ],
-                    function(error) {
+                function(error) {
                         if (error) throw err;
-                        console.log("Sorry, we don't have enough inventory")
+                        console.log("Thank you for your business!")
                     }
-                    )
+                )} else {
+                    console.log("Sorry, but we don't have enough inventory.  Check backs soon!")
                 }
-
             })
     })
 };
