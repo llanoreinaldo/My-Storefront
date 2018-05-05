@@ -1,6 +1,7 @@
 var mysql = require("mysql");
 var inquirer = require("inquirer");
 
+//Connection user login information
 var connection = mysql.createConnection({
 
     host: "localhost",
@@ -22,6 +23,7 @@ connection.connect(function (err) {
 });
 
 
+// Function that displays products inventory available
 function readProducts() {
     var query = "SELECT * FROM products";
     connection.query(query, function (err, res) {
@@ -29,12 +31,13 @@ function readProducts() {
         console.log("Bamazon Store Iventory List");
         console.log("-----------------------------------------------------");
         for (var i = 0; i < res.length; i++) {
-            console.log("Product: " + res[i].product_name + " | Avail Qty: " + res[i].stock_quantity);
-        };        
+            console.log("Item ID: " + res[i].item_id + " | Name: " + res[i].product_name + " | Price: " + res[i].price);
+        };
         orderProducts();
-},
-)};
+    }, )
+};
 
+//Function to order products
 function orderProducts() {
     var query = "SELECT * FROM products";
     connection.query(query, function (err, res) {
@@ -42,47 +45,53 @@ function orderProducts() {
         inquirer
             .prompt([{
                     name: "choice",
-                    type: "list",
-                    choices: function () {
-                        var choiceArray = [];
-                        for (var i = 0; i < res.length; i++) {
-                            choiceArray.push(res[i].product_name)
+                    type: "input",
+                    message: "Enter the ID # of the product you would like to buy?",
+                    validate: function (value) {
+                        if (isNaN(value) === false) {
+                            return true;
                         }
-                        return choiceArray;
-                    },
-                    message: "Which item would you like to buy?"
+                        return false;
+                    }
                 },
                 {
                     name: "quantity",
                     type: "input",
-                    message: "How many would you like to buy?"
+                    message: "How many units would you like to buy?",
+                    validate: function (value) {
+                        if (isNaN(value) === false) {
+                            return true;
+                        }
+                        return false;
+                    }
                 },
             ])
             .then(function (answer) {
-                var chosenItem;
+                var chosenItem
                 for (var i = 0; i < res.length; i++) {
-                    if (res[i].product_name === answer.choice) {
-                        chosenItem = res[i]
+                    if (parseInt(res[i].item_id) === parseInt(answer.choice)) {
+                    chosenItem = res[i];
                     }
                 }
-
                 if (chosenItem.stock_quantity > parseInt(answer.quantity)) {
                     connection.query(
                         "UPDATE products SET ? WHERE ?", 
-                    [
-                        {
-                            stock_quantity: chosenItem.stock_quantity - parseInt(answer.quantity)
-                        },
-                        {
-                            item_id: chosenItem.item_id
+                        [
+                            {
+                                stock_quantity: chosenItem.stock_quantity - parseInt(answer.quantity)
+                            },
+                            {
+                                item_id: chosenItem.item_id
+                            }
+                        ],
+                        function (error) {
+                            if (error) throw err;
+                            console.log("Thank you for your business!")
+                            console.log("Your order total was:  $" + (chosenItem.price * parseInt(answer.quantity)))
                         }
-                    ],
-                function(error) {
-                        if (error) throw err;
-                        console.log("Thank you for your business!")
-                    }
-                )} else {
-                    console.log("Sorry, but we don't have enough inventory.  Check backs soon!")
+                    )
+                } else {
+                    console.log("Insufficient Quantity!")
                 }
             })
     })
