@@ -55,20 +55,73 @@ function displayInventory() {
             console.log("Item ID: " + res[i].item_id + " | Product Name: " + res[i].product_name + " | Price: " + res[i].price + " | Quantities: " + res[i].stock_quantity);
             console.log("--------------------------------------------------------------------------------");
         };
-       menuOptions(); 
+        menuOptions();
     });
-  
+
 }
 
-/*
-function displayLowInv() {
 
+function displayLowInv() {
+    var query = "SELECT * FROM products WHERE stock_quantity < 5";
+    connection.query(query, function (err, res) {
+        if (err) throw err;
+        for (var i = 0; i < res.length; i++) {
+            console.log("Bamazon Store Iventory List");
+            console.log("--------------------------------------------------------------------------------");
+            console.log("Item ID: " + res[i].item_id + " | Product Name: " + res[i].product_name + " | Price: " + res[i].price + " | Quantities: " + res[i].stock_quantity);
+            console.log("--------------------------------------------------------------------------------");
+        };
+        menuOptions();
+    })
 };
 
 function addInventory() {
+    connection.query("SELECT * FROM products", function (err, res) {
+        if (err) throw err;
+        inquirer
+            .prompt([{
+                    name: "item",
+                    type: "list",
+                    message: "Which item would you like to add more of?",
+                    choices: function () {
+                        var choiceArray = [];
+                        for (var i = 0; i < res.length; i++) {
+                            choiceArray.push(res[i].product_name);
+                        }
+                        return choiceArray;
+                    }
+                },
+                {
+                    name: "quantity",
+                    type: "input",
+                    message: "How many units would you like to add?"
+                }
+            ])
+            .then(function (answer) {
+                var chosenItem;
+                for (var i = 0; i < res.length; i++) {
+                    if (res[i].product_name === answer.product_name) {
+                        chosenItem = res[i];
+                    }
+                    connection.query(
+                        "UPDATE products SET ? WHERE ?", 
+                        [
+                            {
+                                stock_quantity: chosenItem.stock_quantity + parseInt(answer.quantity)
+                            },
+                            {
+                                id: chosenItem.id
+                            }
+                        ],
+                        function (error) {
+                            if (error) throw err;
+                            console.log("Sorry, you're Add Inventory Request failed.  Please try again!");
+                        }
+                    );
+                };
+                menuOptions();
+            });
 
-};
+    });
 
-function addNewProduct() {
-
-}*/
+}

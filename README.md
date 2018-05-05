@@ -1,4 +1,4 @@
-#My Bamazon Store Front
+# My Bamazon Store Front
 
 [My Bamazon Store Front](https://llanoreinaldo.github.io/My-Storefront/)
 
