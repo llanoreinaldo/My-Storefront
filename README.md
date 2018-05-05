@@ -10,8 +10,22 @@ In this activity, using the MySQL and Inquirer Node Packages, I created an Amazo
 
 ## SCREENSHOTS
 
-1. Typical User Flow Screenshots
-* Include screenshots (or a video) of typical user flows through your application (for the customer and if relevant the manager/supervisor). This includes views of the prompts and the responses after their selection (for the different selection options).
 
-## Other Screenshots
-* Include any other screenshots you deem necessary to help someone who has never been introduced to your application understand the purpose and function of it. This is how you will communicate to potential employers/other developers in the future what you built and why, and to show how it works. 
+#### Typical User Flow: Customer Screenshots
+
+1.  The app will prompt users with two messages.
+
+    >The first should ask them the ID of the product they would like to buy.
+
+
+    >The second message asks how many units of the product they would like to buy.
+
+
+2.  Once the customer has placed the order, the application will check if your store has enough of the product to meet the customer's request.
+
+3.  If not, the app should log a phrase like `Insufficient quantity!`, and then prevent the order from going through.
+
+4.  However, if the store _does_ have enough of the product, it will fulfill the customer's order. (This means updating the SQL database to reflect the remaining quantity. Once the update goes through, show the customer the total cost of their purchase.
+
+
+## Video of App
