@@ -41,7 +41,7 @@ In this activity, using the MySQL and Inquirer Node Packages, I created an Amazo
 > View Low Inventory (anything less than 5)
 > Add Inventory
 
-![Managing Inventory](add-inventory.gif)
+![Managing Inventory](add_inventory.gif)
 
 > Add New Product
 
