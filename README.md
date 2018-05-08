@@ -44,7 +44,8 @@ In this activity, using the MySQL and Inquirer Node Packages, I created an Amazo
 ![Managing Inventory](add-inventory.gif)
 
 > Add New Product
-[Adding New Product](add-new-product.gif)
+
+![Adding New Product](add-new-product.gif)
 
 
 ## Video of App
