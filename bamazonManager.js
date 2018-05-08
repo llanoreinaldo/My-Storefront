@@ -196,7 +196,7 @@ function addNewProduct() {
 
                     newProduct = answer.product_name;
                     newDeptName = answer.department_name;
-                    newPrice = parseInt(answer.price);
+                    newPrice = answer.price;
                     newQty = parseInt(answer.stock_quantity);
                     console.log(newProduct, newDeptName, newPrice, newQty);
 

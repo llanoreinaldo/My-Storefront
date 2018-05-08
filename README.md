@@ -16,16 +16,39 @@ In this activity, using the MySQL and Inquirer Node Packages, I created an Amazo
 1.  The app will prompt users with two messages.
 
     >The first should ask them the ID of the product they would like to buy.
-
-
     >The second message asks how many units of the product they would like to buy.
 
+2.  Once the customer has placed the order, the application will check if your store has enough of the product to meet the customer's request. 
 
-2.  Once the customer has placed the order, the application will check if your store has enough of the product to meet the customer's request.
+>If there is suffiecent quantities in stock, the log will reflect that their transaction went through and wil show their order total.
 
-3.  If not, the app should log a phrase like `Insufficient quantity!`, and then prevent the order from going through.
+![Ordering Product Successfully](order-product.gif)
 
-4.  However, if the store _does_ have enough of the product, it will fulfill the customer's order. (This means updating the SQL database to reflect the remaining quantity. Once the update goes through, show the customer the total cost of their purchase.
+
+>If not, the app should log a phrase like `Insufficient quantity!`, and then prevent the order from going through.
+
+![Insufficent Inventory](insufficient.gif)
+
+
+#### Manager Portal: Screenshots
+
+1.  The manager view will provide managers with four options they can select from: 
+
+>View Products for Sale
+
+![View Products for Sale](view-inventory.gif)
+
+> View Low Inventory (anything less than 5)
+> Add Inventory
+
+![Managing Inventory](add-inventory.gif)
+
+> Add New Product
+[Adding New Product](add-new-product.gif)
 
 
 ## Video of App
+
+Below is the full video of my command prompt for this project.
+
+[Full Video](finalvideo.mp4)
