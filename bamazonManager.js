@@ -76,52 +76,68 @@ function displayLowInv() {
 };
 
 function addInventory() {
-    connection.query("SELECT * FROM products", function (err, res) {
+    var query = "SELECT * FROM products"
+    connection.query(query, function (err, res) {
         if (err) throw err;
         inquirer
             .prompt([{
-                    name: "item",
-                    type: "list",
-                    message: "Which item would you like to add more of?",
-                    choices: function () {
-                        var choiceArray = [];
-                        for (var i = 0; i < res.length; i++) {
-                            choiceArray.push(res[i].product_name);
+                    name: "choice",
+                    type: "input",
+                    message: "Enter the ID # of the product you would like to buy?",
+                    validate: function (value) {
+                        if (isNaN(value) === false) {
+                            return true;
                         }
-                        return choiceArray;
+                        return false;
                     }
                 },
                 {
                     name: "quantity",
                     type: "input",
-                    message: "How many units would you like to add?"
+                    message: "How many units would you like to add?",
+                    validate: function (value) {
+                        if (isNaN(value) === false) {
+                            return true;
+                        }
+                        return false;
+                    }
                 }
             ])
             .then(function (answer) {
-                var chosenItem;
+                var chosenItem,
+                    currentAmt,
+                    addAmt,
+                    newAmt;
+                
                 for (var i = 0; i < res.length; i++) {
-                    if (res[i].product_name === answer.product_name) {
+                    if (parseInt(res[i].item_id) === parseInt(answer.choice)) {
                         chosenItem = res[i];
+                        currentAmt = chosenItem.stock_quantity;
+                        addAmt = answer.quantity
+                        newAmt = currentAmt + addAmt;
+                        console.log(chosenItem, currentAmt, addAmt, newAmt);
+                        debugger;
                     }
-                    connection.query(
-                        "UPDATE products SET ? WHERE ?", 
-                        [
-                            {
-                                stock_quantity: chosenItem.stock_quantity + parseInt(answer.quantity)
-                            },
-                            {
-                                id: chosenItem.id
-                            }
-                        ],
-                        function (error) {
-                            if (error) throw err;
-                            console.log("Sorry, you're Add Inventory Request failed.  Please try again!");
-                        }
-                    );
+                    if (chosenItem.item_id === parseInt(answer.choice)) {
+                        connection.query(
+                            "UPDATE products SET ? WHERE ?", [{
+                                    stock_quantity: newAmt
+                                },
+                                {
+                                    item_id: chosenItem.item_id
+                                }
+                            ],
+                            function (error) {
+                                if (error) throw err;
+                                console.log("Sorry, you're Add Inventory Request failed.  Please try again!");
+                            });
+                        menuOptions()
+                    }
                 };
-                menuOptions();
             });
-
     });
-
 }
+
+function addNewProduct() {
+
+};
