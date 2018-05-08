@@ -156,7 +156,7 @@ function addNewProduct() {
                 {
                     name: "price",
                     type: "input",
-                    message: "What praice will this product be sold?",
+                    message: "What price will this product be sold?",
                     validate: function (value) {
                         if (isNaN(value) === false) {
                             return true;
@@ -177,7 +177,7 @@ function addNewProduct() {
                 }
             ])
             .then(function (answer) {
-                var prodDoesNotExists = true;
+                var prodDoesNotExists = true,
                 newProduct,
                 newDeptName,
                 newPrice,
@@ -193,18 +193,22 @@ function addNewProduct() {
                 }
 
                 if (prodDoesNotExists === true) {
+
                     newProduct = answer.product_name;
                     newDeptName = answer.department_name;
                     newPrice = parseInt(answer.price);
                     newQty = parseInt(answer.stock_quantity);
+                    console.log(newProduct, newDeptName, newPrice, newQty);
 
                     connection.query(
-                        "INSERT INTO products SET ?", {
+                        "INSERT INTO products SET ?", [
+                        {
                             product_name: newProduct,
                             department_name: newDeptName,
                             price: newPrice,
                             stock_quantity: newQty
-                        },
+                        }
+                    ],
                         function (error) {
                             if (error) throw err;
                             console.log("Your request to add a new product to the inventory has been received and processed.");
