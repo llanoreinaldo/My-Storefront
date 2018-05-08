@@ -106,38 +106,114 @@ function addInventory() {
             .then(function (answer) {
                 var chosenItem,
                     currentAmt,
-                    addAmt,
-                    newAmt;
-                
+                    addAmt;
+
                 for (var i = 0; i < res.length; i++) {
                     if (parseInt(res[i].item_id) === parseInt(answer.choice)) {
                         chosenItem = res[i];
                         currentAmt = chosenItem.stock_quantity;
-                        addAmt = answer.quantity
-                        newAmt = currentAmt + addAmt;
-                        console.log(chosenItem, currentAmt, addAmt, newAmt);
-                        debugger;
-                    }
-                    if (chosenItem.item_id === parseInt(answer.choice)) {
-                        connection.query(
-                            "UPDATE products SET ? WHERE ?", [{
-                                    stock_quantity: newAmt
-                                },
-                                {
-                                    item_id: chosenItem.item_id
-                                }
-                            ],
-                            function (error) {
-                                if (error) throw err;
-                                console.log("Sorry, you're Add Inventory Request failed.  Please try again!");
-                            });
-                        menuOptions()
-                    }
-                };
+                        addAmt = parseInt(answer.quantity);
+                    };
+                }
+                if (chosenItem.item_id === parseInt(answer.choice)) {
+                    connection.query(
+                        "UPDATE products SET ? WHERE ?", [{
+                                stock_quantity: currentAmt + addAmt
+                            },
+                            {
+                                item_id: chosenItem.item_id
+                            }
+                        ],
+                        function (error) {
+                            if (error) throw err;
+                            console.log("Your request to add inventory has been received and processed.");
+                            menuOptions()
+                        });
+
+                } else {
+                    console.log("Sorry, you're Add Inventory Request failed.  Please try again!");
+                }
+
             });
     });
 }
 
 function addNewProduct() {
+    var query = "SELECT * FROM products"
+    connection.query(query, function (err, res) {
+        if (err) throw err;
+        inquirer
+            .prompt([{
+                    name: "product_name",
+                    type: "input",
+                    message: "What is the name of the new product",
+                },
+                {
+                    name: "department_name",
+                    type: "input",
+                    message: "What department is this product in?",
+                },
+                {
+                    name: "price",
+                    type: "input",
+                    message: "What praice will this product be sold?",
+                    validate: function (value) {
+                        if (isNaN(value) === false) {
+                            return true;
+                        }
+                        return false;
+                    }
+                },
+                {
+                    name: "stock_quantity",
+                    type: "input",
+                    message: "How many items are on stock?",
+                    validate: function (value) {
+                        if (isNaN(value) === false) {
+                            return true;
+                        }
+                        return false;
+                    }
+                }
+            ])
+            .then(function (answer) {
+                var prodDoesNotExists = true;
+                newProduct,
+                newDeptName,
+                newPrice,
+                newQty;
 
-};
+                for (var i = 0; i < res.length; i++) {
+
+                    if (parseInt(res[i].product_name) === (answer.product_name)) {
+                        console.log("Sorry, this item already exists. Select Add Inventory instead.");
+                        prodDoesNotExists = false;
+                        menuOptions();
+                    }
+                }
+
+                if (prodDoesNotExists === true) {
+                    newProduct = answer.product_name;
+                    newDeptName = answer.department_name;
+                    newPrice = parseInt(answer.price);
+                    newQty = parseInt(answer.stock_quantity);
+
+                    connection.query(
+                        "INSERT INTO products SET ?", {
+                            product_name: newProduct,
+                            department_name: newDeptName,
+                            price: newPrice,
+                            stock_quantity: newQty
+                        },
+                        function (error) {
+                            if (error) throw err;
+                            console.log("Your request to add a new product to the inventory has been received and processed.");
+                            menuOptions()
+                        });
+                } else {
+                    console.log("Sorry, you're Add New Product Request failed.  Please try again!");
+                }
+
+            })
+    });
+}
